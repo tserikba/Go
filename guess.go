@@ -1,4 +1,3 @@
-// guess - игра, в которой игрок должен угадать случайное число.
 package main
 
 import (
@@ -16,7 +15,7 @@ func main() {
 	seconds := time.Now().Unix()
 	rand.Seed(seconds)
 	target := rand.Intn(100) + 1
-	fmt.Println("I've chosena random number between 1 and 100.")
+	fmt.Println("I've chosen a random number between 1 and 100.")
 	fmt.Println("Can you guess it?")
 
 	reader := bufio.NewReader(os.Stdin)
