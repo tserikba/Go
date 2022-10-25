@@ -1,46 +1,25 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
-	"html/template"
-	"net/http"
+
+	_ "github.com/go-sql-driver/mysql"
 )
 
-type User struct {
-	Name                  string
-	Age                   uint16
-	Money                 int16
-	Avg_grades, Happiness float64
-	Hobbies               []string
-}
-
-func (u User) getAllInfo() string {
-	return fmt.Sprintf("User name is: %s. He is %d and he has money "+
-		"equal: %d", u.Name, u.Age, u.Money)
-}
-
-func (u *User) setNewName(newName string) {
-	u.Name = newName
-}
-
-func home_page(w http.ResponseWriter, r *http.Request) {
-	bob := User{"Bob", 26, 98, 4.2, 0.9, []string{"Football", "Dance"}}
-	//bob.setNewName("Alex")
-	//fmt.Fprintf(w, `<b>Main Text</b>`)
-	tmpl, _ := template.ParseFiles("templates/home_page.html")
-	tmpl.Execute(w, bob)
-}
-
-func contacts_page(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Contacts page")
-}
-
-func handleRequest() {
-	http.HandleFunc("/", home_page)
-	http.HandleFunc("/contacts/", contacts_page)
-	http.ListenAndServe(":8080", nil)
-}
-
 func main() {
-	handleRequest()
+	db, err := sql.Open("mysql", "root:root@tcp(127.0.0.1:8889)/golang")
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
+
+	//Data setting
+	insert, err := db.Query("INSERT INTO Users (name, age) VALUES('Alexander', 25)")
+	if err != nil {
+		panic(err)
+	}
+	defer insert.Close()
+
+	fmt.Println("Connected to mysql")
 }
